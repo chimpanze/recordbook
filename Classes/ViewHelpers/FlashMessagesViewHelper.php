@@ -61,12 +61,33 @@ class FlashMessagesViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractTagBa
 	 */
 	public function render() {
 		$flashMessages = $this->controllerContext->getFlashMessageContainer()->getMessagesAndFlush();
+		
 		if (count($flashMessages) > 0) {
-			$tagContent = '<ul>';
+			$tagContent = '';
+			
 			foreach ($flashMessages as $singleFlashMessage) {
-				$tagContent .=  '<li>' . htmlspecialchars($singleFlashMessage) . '</li>';
+				
+				switch($singleFlashMessage->getSeverity()) {
+					case \TYPO3\FLOW3\Error\Message::SEVERITY_WARNING:
+						$alertClass = 'warning';
+						break;
+					case \TYPO3\FLOW3\Error\Message::SEVERITY_NOTICE:
+						$alertClass = 'info';
+						break;
+					case \TYPO3\FLOW3\Error\Message::SEVERITY_OK:
+						$alertClass = 'success';
+						break;
+					case \TYPO3\FLOW3\Error\Message::SEVERITY_ERROR:
+						$alertClass = 'error';
+						break;
+				}
+				
+				$tagContent .= '<div class="alert alert-'.$alertClass.'">';
+				$tagContent .= '<a class="close" data-dismiss="alert">×</a>';
+				$tagContent .=  '' . htmlspecialchars($singleFlashMessage) . '';
+				$tagContent .= '</div>';
 			}
-			$tagContent .= '</ul>';
+
 			$this->tag->setContent($tagContent);
 			return $this->tag->render();
 		}
