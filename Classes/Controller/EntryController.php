@@ -96,6 +96,23 @@ class EntryController extends ActionController {
 		$this->addFlashMessage('Deleted a entry.');
 		$this->redirect('index');
 	}
+	
+	/**
+	 * Upload Action
+	 * 
+	 * @return void
+	 */
+	public function uploadAction() {
+	}
+	
+	/**
+	 * Import Action
+	 * 
+	 * @return void
+	 */
+	public function importAction() {
+		
+	}
 
 }
 
