@@ -27,6 +27,14 @@ class User extends \TYPO3\Party\Domain\Model\Person {
 	
 	/**
 	 *
+	 * @var \Doctrine\Common\Collections\Collection<\RecordBook\Domain\Model\Csv>
+	 * @ORM\OneToMany(mappedBy="user")
+	 * @ORM\OrderBy({"date" = "DESC"})
+	 */
+	protected $csvs;
+	
+	/**
+	 *
 	 * @var string 
 	 * @FLOW3\Validate(type="NotEmpty")
 	 */
@@ -34,7 +42,8 @@ class User extends \TYPO3\Party\Domain\Model\Person {
 	
 	public function __construct() {
 		parent::__construct();
-		$this->entries = new \Doctrine\Common\Collections\ArrayCollection();		
+		$this->entries = new \Doctrine\Common\Collections\ArrayCollection();
+		$this->csvs = new \Doctrine\Common\Collections\ArrayCollection();
 	}
 	
 	public function addEntry(\RecordBook\Domain\Model\Entry $entry) {
@@ -45,6 +54,18 @@ class User extends \TYPO3\Party\Domain\Model\Person {
 		$this->entries->removeElement($entry);
 	}
 	
+	public function addCsv(\RecordBook\Domain\Model\Csv $csv) {
+		$this->csvs->add($csv);
+	}
+	
+	public function removeCsv(\RecordBook\Domain\Model\Csv $csv) {
+		$this->csvs->removeElement($csv);
+	}
+	
+	public function getCsvs() {
+		return clone $this->csvs;
+	}
+
 	public function getEntries() {
 		return clone $this->entries;
 	}

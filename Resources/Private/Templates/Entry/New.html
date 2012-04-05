@@ -3,7 +3,15 @@
 <f:section name="Title">Neuer Eintrag</f:section>
 
 <f:section name="Content">
-	<f:form action="create" name="newEntry" class="form-horizontal">
+        <f:form.validationResults for="newEntry">
+                <f:if condition="{validationResults.flattenedErrors}">
+                        <div class="error">
+                                <f:for each="{validationResults.flattenedErrors}" key="propertyPath" as="errors">{propertyPath}: <f:for each="{errors}" as="error">{error}</f:for></f:for>
+                        </div>
+                </f:if>
+        </f:form.validationResults>
+	
+	<f:form action="create" name="newEntry" object="{newEntry}" class="form-horizontal">
 		<fieldset>
 			<legend>Neuen Eintrag anlegen</legend>
 			<div class="control-group">
@@ -16,6 +24,12 @@
 				<label class="control-label" for="date">Datum:</label>
 				<div class="controls">
 					<f:form.textfield property="date" id="date" />
+				</div>
+			</div>	
+			<div class="control-group">
+				<label class="control-label" for="duration">Dauer:</label>
+				<div class="controls">
+					<f:form.textfield property="duration" id="duration" />
 				</div>
 			</div>		
 			<div class="control-group">

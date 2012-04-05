@@ -38,12 +38,26 @@ class EntryController extends ActionController {
 	protected $entryRepository;
 
 	/**
+	 * @FLOW3\Inject
+	 * @var \RecordBook\Domain\Repository\CsvRepository
+	 */
+	protected $csvRepository;
+	
+        /**
+         * @FLOW3\Inject
+         * @var \TYPO3\FLOW3\Resource\ResourceManager
+         */
+        protected $resourceManager;
+	
+	/**
 	 * Shows a list of entries
 	 *
 	 * @return void
 	 */
 	public function indexAction() {
-		$this->view->assign('entries', $this->entryRepository->findAll());
+		$account = $this->authenticationManager->getSecurityContext()->getAccount();
+		$user = $account->getParty();
+		$this->view->assign('entries', $this->entryRepository->findByUser($user));
 	}
 
 	/**
@@ -62,7 +76,21 @@ class EntryController extends ActionController {
 	 * @return void
 	 */
 	public function newAction() {
+		$this->view->assign('newEntry', new \RecordBook\Domain\Model\Entry());
 	}
+	
+/**
+         * Initialize the create action
+         *
+         * @return void
+         */
+        public function initializeCreateAction() {
+                $this->arguments['newEntry']->
+                     getPropertyMappingConfiguration()
+                     ->forProperty('date') // this line can be skipped in order to specify the format for all properties
+                     ->setTypeConverterOption('TYPO3\FLOW3\Property\TypeConverter\DateTimeConverter',
+                     \TYPO3\FLOW3\Property\TypeConverter\DateTimeConverter::CONFIGURATION_DATE_FORMAT, 'd.m.Y');
+        }
 
 	/**
 	 * Adds the given new entry object to the entry repository
@@ -70,11 +98,12 @@ class EntryController extends ActionController {
 	 * @param \RecordBook\Domain\Model\Entry $newEntry A new entry to add
 	 * @return void
 	 */
-	public function createAction(Entry $newEntry) {
-		
+	public function createAction(\RecordBook\Domain\Model\Entry $newEntry) {
+		$account = $this->authenticationManager->getSecurityContext()->getAccount();
+		$user = $account->getParty();
 		$newEntry->setUser($user);
 		$this->entryRepository->add($newEntry);
-		$this->addFlashMessage('Created a new entry.');
+		$this->addFlashMessage('Neuer Eintrag erstellt.');
 		$this->redirect('index');
 	}
 
@@ -115,9 +144,17 @@ class EntryController extends ActionController {
 	/**
 	 * Upload Action
 	 * 
+	 * @param \RecordBook\Domain\Model\Csv $newCsv The csv to save
 	 * @return void
 	 */
-	public function uploadAction() {
+	public function uploadAction(\RecordBook\Domain\Model\Csv $newCsv) {
+		$account = $this->authenticationManager->getSecurityContext()->getAccount();
+		$user = $account->getParty();
+		$newCsv->setUser($user);
+		$newCsv->setDate(new \DateTime());
+		$this->csvRepository->add($newCsv);
+		$this->addFlashMessage('Datei wurde erfolgreich importiert!');
+		$this->forward('import');
 	}
 	
 	/**
@@ -126,7 +163,11 @@ class EntryController extends ActionController {
 	 * @return void
 	 */
 	public function importAction() {
-		
+		$account = $this->authenticationManager->getSecurityContext()->getAccount();
+		$user = $account->getParty();
+		$csvs = $this->csvRepository->findByUser($user);
+		$this->view->assign('csvs', $csvs);
+		$this->view->assign('newCsv', new \RecordBook\Domain\Model\Csv());		
 	}
 
 }

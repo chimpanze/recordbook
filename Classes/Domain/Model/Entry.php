@@ -64,7 +64,6 @@ class Entry {
 	 * 
 	 * @ORM\ManyToOne(inversedBy="entries")
 	 * @var \RecordBook\Domain\Model\User
-	 * @FLOW3\Validate(type="NotEmpty")
 	 */
 	protected $user;
 

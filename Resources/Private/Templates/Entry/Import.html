@@ -1,0 +1,45 @@
+<f:layout name="Default" />
+
+<f:section name="Title">Neuer Eintrag</f:section>
+
+<f:section name="Content">
+	<f:if condition="{csvs}">
+		<ul>
+		<f:for each="{csvs}" as="csv">
+			<li><f:format.date>{csv.date}</f:format.date> - <f:uri.resource resource="{csv.originalResource}">Download</f:uri.resource></li>
+		</f:for>
+		</ul>
+	</f:if>
+	
+        <f:form.validationResults for="newCsv">
+                <f:if condition="{validationResults.flattenedErrors}">
+                        <div class="error">
+                                <f:for each="{validationResults.flattenedErrors}" key="propertyPath" as="errors">{propertyPath}: <f:for each="{errors}" as="error">{error}</f:for></f:for>
+                        </div>
+                </f:if>
+        </f:form.validationResults>
+	
+        <f:form method="post" action="upload" object="{newCsv}" name="newCsv" enctype="multipart/form-data" class="form-horizontal">
+                <fieldset>
+                        <legend>CSV Datei importieren</legend>
+                        <div class="control-group">
+                                <label class="control-label" for="csv">CSV Datei:</label>
+                                <div class="controls">
+                                        <f:form.upload property="originalResource" id="csv" />
+                                </div>
+                        </div>
+                        <div class="form-actions">
+                                <f:form.submit class="btn btn-primary" value="CSV Datei importieren"/>
+                        </div>
+
+                </fieldset>
+        </f:form>
+</f:section>
+
+<f:section name="Sidebar">
+        <ul class="nav nav-pills nav-stacked">
+                <li><f:link.action action="index"><i class="icon-list-alt"></i> Übersicht</f:link.action></li>
+                <li><f:link.action action="new"><i class="icon-plus-sign"></i> Neuer Eintrag</f:link.action></li>
+                <li class="active"><f:link.action action="import"><i class="icon-upload"></i> Importieren</f:link.action></li>
+        </ul>
+</f:section>

@@ -83,12 +83,24 @@ class UserController extends ActionController {
 	 */
 	public function createAction($username, $password, $password_repeat, $name, $email) {
 		$defaultRole = 'User';
-
+		
 		if($username == '' || strlen($username) < 3) {
 			$this->addFlashMessage('Benutzername zu kurz oder leer.');
 			$this->redirect('register');
 		} else if($password == '' || $password != $password_repeat) {
 			$this->addFlashMessage('Passwort zu kurz oder leer.');
+			$this->redirect('register');
+		} else if(!is_string($email) || !preg_match('
+				/^
+					[a-z0-9!#$%&\'*+\/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&\'*+\/=?^_`{|}~-]+)*
+					@
+					(?:
+						(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+(?:[a-z]{2}|aero|asia|biz|cat|com|edu|coop|gov|info|int|invalid|jobs|localdomain|mil|mobi|museum|name|net|org|pro|tel|travel)|
+						localhost|
+						(?:(?:\d{1,2}|1\d{1,2}|2[0-4][0-9]|25[0-5])\.){3}(?:(?:\d{1,2}|1\d{1,2}|2[0-4][0-9]|25[0-5]))
+					)
+				$/Dix', $email)) {
+			$this->addFlashMessage('E-Mail Adresse ist nicht valide.');
 			$this->redirect('register');
 		} else {
 			// create a account with password an add it to the accountRepository
@@ -101,11 +113,11 @@ class UserController extends ActionController {
 			$this->accountRepository->add($account);
 
 			// add a message and redirect to the login form
-			$this->addFlashMessage('Account created. Please login.');
-			$this->redirect('index');
+			$this->addFlashMessage('Account wurde erstellt. Logge dich ein!');
+			$this->redirect('login');
 		}
 		
-		$this->redirect('index');
+		$this->redirect('login');
 	}
 	
 /**
@@ -214,7 +226,7 @@ class UserController extends ActionController {
 	public function logoutAction() {
 		$this->authenticationManager->logout();
 		$this->addFlashMessage('Sie wurden ausgeloggt.');
-		$this->redirect('index');
+		$this->redirect('login');
 	}
 	
 	public function registerAction() {

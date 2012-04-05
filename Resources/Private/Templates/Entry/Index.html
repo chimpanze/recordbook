@@ -8,7 +8,8 @@
 			<ul>
 				<f:for each="{entries}" as="entry">
 					<li>
-						<f:link.action action="show" arguments="{entry: entry}">{entry.name}</f:link.action>
+						<f:link.action action="show" arguments="{entry: entry}"><f:format.date>{entry.date}</f:format.date></f:link.action>
+						{entry.user.username}
 						<f:link.action action="edit" arguments="{entry: entry}">Edit</f:link.action>
 						<f:link.action action="delete" arguments="{entry: entry}">Delete</f:link.action>
 					</li>

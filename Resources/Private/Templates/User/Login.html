@@ -19,6 +19,11 @@
 					<f:form.password name="__authentication[TYPO3][FLOW3][Security][Authentication][Token][UsernamePassword][password]" class="input" />
 				</div>
 			</div>
+			
+			<p>
+				Besitzt du noch keinen Account? <f:link.action action="register" controller="User">Dann registriere dich hier!</f:link.action><br />
+				<f:link.action action="password" controller="User">Oder hast du vielleicht dein Passwort vergessen?</f:link.action>
+			</p>
 
 			<div class="form-actions">
 				<input type="submit" class="btn btn-primary" value="Login" tabindex="3" />
