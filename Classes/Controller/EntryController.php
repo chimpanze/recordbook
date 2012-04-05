@@ -10,6 +10,7 @@ use TYPO3\FLOW3\Annotations as FLOW3;
 
 use TYPO3\FLOW3\MVC\Controller\ActionController;
 use \RecordBook\Domain\Model\Entry;
+use \RecordBook\Domain\Model\User;
 
 /**
  * Entry controller for the RecordBook package 
@@ -18,6 +19,18 @@ use \RecordBook\Domain\Model\Entry;
  */
 class EntryController extends ActionController {
 
+	/**
+	 * @FLOW3\Inject
+	 * @var \TYPO3\FLOW3\Security\Authentication\AuthenticationManagerInterface
+	 */
+	protected $authenticationManager;
+
+	/**
+	 * @var \TYPO3\FLOW3\Security\AccountRepository
+	 * @FLOW3\Inject
+	 */
+	protected $accountRepository;
+	
 	/**
 	 * @FLOW3\Inject
 	 * @var \RecordBook\Domain\Repository\EntryRepository
@@ -58,6 +71,8 @@ class EntryController extends ActionController {
 	 * @return void
 	 */
 	public function createAction(Entry $newEntry) {
+		
+		$newEntry->setUser($user);
 		$this->entryRepository->add($newEntry);
 		$this->addFlashMessage('Created a new entry.');
 		$this->redirect('index');

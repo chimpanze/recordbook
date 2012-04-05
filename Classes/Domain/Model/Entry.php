@@ -23,7 +23,7 @@ class Entry {
 	 *
 	 * @var string
 	 * @FLOW3\Validate(type="Text")
-	 * @FLOW3\Validate(type="StringLength", options={ "minimum"=1 })
+	 * @FLOW3\Validate(type="NotEmpty")
 	 * @ORM\Column(type="text")
 	 */
 	protected $work;
@@ -32,6 +32,7 @@ class Entry {
 	 * date
 	 *
 	 * @var \DateTime
+	 * @FLOW3\Validate(type="NotEmpty")
 	 * @ORM\Column(type="datetime")
 	 */
 	protected $date;
@@ -40,6 +41,7 @@ class Entry {
 	 * duration
 	 *
 	 * @var float
+	 * @FLOW3\Validate(type="NotEmpty")
 	 */
 	protected $duration;
 
@@ -62,6 +64,7 @@ class Entry {
 	 * 
 	 * @ORM\ManyToOne(inversedBy="entries")
 	 * @var \RecordBook\Domain\Model\User
+	 * @FLOW3\Validate(type="NotEmpty")
 	 */
 	protected $user;
 

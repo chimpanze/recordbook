@@ -3,6 +3,7 @@
 <f:section name="Title">A list of users</f:section>
 
 <f:section name="Content">
+	<f:security.ifHasRole role="User">
 	<f:if condition="{users}">
 		<f:then>
 			<ul>
@@ -19,5 +20,14 @@
 			<p>No users created yet.</p>
 		</f:else>
 	</f:if>
+	</f:security.ifHasRole>
 	<p><f:link.action action="new">Create a new user</f:link.action></p>
+</f:section>
+
+<f:section name="Sidebar">
+	<ul class="nav nav-pills nav-stacked">
+		<li><f:link.action action="login"><i class="icon-user"></i> Login</f:link.action></li>
+		<li><f:link.action action="register"><i class="icon-heart"></i> Registrieren</f:link.action></li>
+		<li><f:link.action action="password"><i class="icon-question-sign"></i> Kennwort vergessen?</f:link.action></li>
+	</ul>
 </f:section>

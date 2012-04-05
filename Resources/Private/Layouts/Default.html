@@ -35,6 +35,9 @@
 						<ul class="nav">
 							<li><a href="/recordbook/entry/"><i class="icon-list-alt icon-white"></i> Einträge</a></li>
 							<li><a href="/recordbook/user/"><i class="icon-user icon-white"></i> Benutzer</a></li>
+							<f:security.ifHasRole role="User">
+							<li><f:link.action action="logout" controller="User"><i class="icon-eject icon-white"></i> Logout</f:link.action></li>
+							</f:security.ifHasRole>
 						</ul>
 					</div><!--/.nav-collapse -->
 				</div>
