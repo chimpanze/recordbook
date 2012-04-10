@@ -108,7 +108,7 @@ class Entry {
 	/**
 	 * Returns the duration
 	 *
-	 * @return int $duration
+	 * @return float $duration
 	 */
 	public function getDuration() {
 		return $this->duration;
@@ -117,7 +117,7 @@ class Entry {
 	/**
 	 * Sets the duration
 	 *
-	 * @param int $duration
+	 * @param float $duration
 	 * @return void
 	 */
 	public function setDuration($duration) {

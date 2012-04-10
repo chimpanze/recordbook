@@ -170,6 +170,47 @@ class EntryController extends ActionController {
 		$this->view->assign('newCsv', new \RecordBook\Domain\Model\Csv());		
 	}
 
+	/**
+	 * Import the CSV into the Database
+	 * 
+	 * @param \RecordBook\Domain\Model\Csv $csv 
+	 */
+	public function importCsvAction(\RecordBook\Domain\Model\Csv $csv) {
+		$account = $this->authenticationManager->getSecurityContext()->getAccount();
+		$user = $account->getParty();
+		
+		$resource = $csv->getOriginalResource()->getResourcePointer();
+		$csvFile = file_get_contents('resource://' . $resource);
+		
+		$lines = preg_split('/\r\n|\r|\n/', $csvFile);
+		foreach($lines as $line) {
+			$tmp_entry = array();
+			$tmp_entry = str_getcsv($line);
+
+			if(is_array($tmp_entry) && $tmp_entry[0] != null) {
+				$newEntry = new \RecordBook\Domain\Model\Entry;
+				$dateTime = new \DateTime();
+				$splittedTime = explode('.', $tmp_entry[0]);
+				$dateTime->setDate($splittedTime[2], $splittedTime[1], $splittedTime[0]);
+				$dateTime->setTime(0, 0, 0);
+				$newEntry->setDate($dateTime);
+				$newEntry->setDuration((float)$tmp_entry[1]);
+				$newEntry->setWork(utf8_encode($tmp_entry[2]));
+				$newEntry->setUser($user);
+				$this->entryRepository->add($newEntry);
+			}
+		}
+		$this->addFlashMessage('Der Inhalt wurde importiert.');
+		$this->forward('import');
+	}
+	
+	/**
+	 * 
+	 */
+	public function calendarAction() {
+		
+	}
+
 }
 
 ?>

@@ -7,6 +7,7 @@ namespace RecordBook\Domain\Repository;
  *                                                                        */
 
 use TYPO3\FLOW3\Annotations as FLOW3;
+use \RecordBook\Domain\Model\User;
 
 /**
  * A repository for Entries
@@ -15,7 +16,31 @@ use TYPO3\FLOW3\Annotations as FLOW3;
  */
 class EntryRepository extends \TYPO3\FLOW3\Persistence\Repository {
 
-	// add customized methods here
+	/**
+	 * Retrieve Entries by Start Timestamp and End Timestamp
+	 * 
+	 * @param int $start
+	 * @param int $end 
+	 * @param \RecordBook\Domain\Model\User $user
+	 * @return \Doctrine\Common\Collections\ArrayCollection
+	 */
+	public function findByStartAndEnd($start, $end, $user) {
+		$query = $this->createQuery();
+		
+		$startDateTime = new \DateTime();
+		$endDateTime = new \DateTime();
+		
+		$startDateTime->setTimestamp($start);
+		$endDateTime->setTimestamp($end);
+		
+		return $query->matching(
+			$query->logicalAnd(
+				$query->greaterThanOrEqual('date', $startDateTime),
+				$query->lessThanOrEqual('date', $endDateTime),
+				$query->equals('user', $user)
+				)			
+			)->execute();
+	}
 
 }
 ?>

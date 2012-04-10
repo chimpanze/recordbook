@@ -1,0 +1,189 @@
+{namespace rb=RecordBook\ViewHelpers}
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="description" content="">
+		<meta name="author" content="">
+
+		<!-- Le styles -->
+		<link href="/_Resources/Static/Packages/RecordBook/css/bootstrap.min.css" rel="stylesheet">
+		<link href="/_Resources/Static/Packages/RecordBook/css/fullcalendar.css" rel="stylesheet">
+		<style>
+			body {
+				padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
+			}
+		</style>
+		<title>Berichtsheft Generator - <f:render section="Title" /></title>
+		<f:base />
+		<!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+		<!--[if lt IE 9]>
+			<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+		<![endif]-->
+	</head>
+	<body>
+		<div class="navbar navbar-fixed-top">
+			<div class="navbar-inner">
+				<div class="container">
+					<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					</a>
+					<a class="brand" href="#">Berichtsheft Generator</a>
+					<div class="nav-collapse">
+						<ul class="nav">
+							<f:security.ifHasRole role="User">
+								<f:then>
+									<li><f:link.action action="calendar" controller="Entry"><i class="icon-calendar icon-white"></i> Kalender</f:link.action></li>
+									<li><f:link.action action="index" controller="Entry"><i class="icon-list-alt icon-white"></i> Einträge</f:link.action></li>
+									<li><f:link.action action="index" controller="User"><i class="icon-user icon-white"></i> Mein Account</f:link.action></li>
+									<li><f:link.action action="logout" controller="User"><i class="icon-eject icon-white"></i> Logout</f:link.action></li>
+								</f:then>
+								<f:else>
+									<li><f:link.action action="login" controller="User"><i class="icon-user icon-white"></i> Login</f:link.action></li>
+									<li><f:link.action action="register" controller="User"><i class="icon-heart icon-white"></i> Registrieren</f:link.action></li>
+								</f:else>
+							</f:security.ifHasRole>
+						</ul>
+					</div><!--/.nav-collapse -->
+				</div>
+			</div>
+		</div>
+
+		<div class="container-fluid">
+			<rb:flashMessages class="messages" />
+			<div class="row-fluid">
+					<f:render section="Content" />
+			</div>
+		</div>
+		
+		<div id="modaledit" class="modal hide fade">
+			<form action="/recordbook/json/update" id="update" method="POST" class="form-horizontal">
+				<div class="modal-header">
+					<a class="close" data-dismiss="modal">×</a>
+					<h3>Eintrag bearbeiten</h3>
+				</div>
+				<div class="modal-body">
+						<input type="hidden" name="id" id="id" value="" />
+						<div class="control-group">
+							<label class="control-label" for="work">Beschreibung</label>
+							<div class="controls">
+								<textarea rows="3" cols="50" id="work" name="work" class="input-xlarge"></textarea>
+							</div>
+						</div>
+						<div class="control-group">
+							<label class="control-label" for="date">Datum:</label>
+							<div class="controls">
+								<input type="text" name="date" id="date" />
+							</div>
+						</div>	
+						<div class="control-group">
+							<label class="control-label" for="duration">Dauer:</label>
+							<div class="controls">
+								<input type="text" name="duration" id="duration" />
+							</div>
+						</div>		
+						<div class="control-group">
+							<label class="control-label" for="holiday">Urlaub:</label>
+							<div class="controls">
+								<input type="checkbox" name="holiday" id="holiday" />
+							</div>
+						</div>	
+						<div class="control-group">
+							<label class="control-label" for="school">Schule:</label>
+							<div class="controls">
+								<input type="checkbox" name="school" id="school" />
+							</div>
+						</div>	
+				</div>
+				<div class="modal-footer">
+					<a href="#" class="btn" data-dismiss="modal">Abbrechen</a>
+					<input type="submit" class="btn btn-primary" id="submit" value="Speichern" />
+				</div>
+			</form>
+		</div>
+		
+		<!-- Le javascript
+		================================================== -->
+		<!-- Placed at the end of the document so the pages load faster -->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/jquery-ui.min.js"></script>
+		<script src="_Resources/Static/Packages/RecordBook/js/bootstrap.min.js"></script>
+		<script src="_Resources/Static/Packages/RecordBook/js/fullcalendar.js"></script>
+		<script>
+			$(document).ready(function() {
+				$('#update').submit(function(event) {
+					event.preventDefault();
+					
+					var fields = $('#update').serializeArray();
+					
+					$.ajax({
+						url: '/recordbook/json/update',
+						type: 'POST',
+						data: fields,
+						success: function(data) {
+							$('#modaledit').modal('hide');
+							$('#calendar').fullCalendar( 'refetchEvents' )
+						},
+						error: function(data) {
+							
+						}
+					});
+					
+					return false;
+				});
+				
+				$('#calendar').fullCalendar({
+					editable: true,
+					monthNames: ['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'],
+					monthNamesShort: ['Jan','Feb','Mär','Apr','Mai','Jun','Jul','Aug','Sep','Okt','Nov','Dez'],
+					dayNames: ['Sonntag','Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag'],
+					dayNamesShort: ['So','Mo','Di','Mi','Do','Fr','Sa'],
+					buttonText: {
+						today: 'Heute',
+						month: 'Monat',
+						week: 'Woche',
+						day: 'Tag'
+					},
+					firstDay: 1,
+					aspectRatio: 2.5,
+					events: {
+						url: '/recordbook/json/load'
+					},
+					eventDrop: function(event,dayDelta,minuteDelta,allDay,revertFunc) {
+						$.ajax({
+							url: '/recordbook/json/drop',
+							type: 'POST',
+							data: {
+								id: event.id,
+								date: $.fullCalendar.formatDate(event._start, 'dd.MM.yyyy')
+							},
+							error: function(data) {
+								revertFunc();
+							}
+						});
+					},
+					eventClick: function(calEvent, jsEvent, view) {
+						$('#modaledit').find('#id').val(calEvent.id);
+						$('#modaledit').find('#work').val(calEvent.title);
+						$('#modaledit').find('#date').val($.fullCalendar.formatDate(calEvent.start, 'dd.MM.yyyy'));
+						$('#modaledit').find('#duration').val(calEvent.duration);
+						if(calEvent.holiday) {
+							$('#modaledit').find('#holiday').attr('checked', 'checked');
+						} else {
+							$('#modaledit').find('#holiday').removeAttr('checked');
+						}
+						if(calEvent.school) {
+							$('#modaledit').find('#school').attr('checked', 'checked');
+						} else {
+							$('#modaledit').find('#school').removeAttr('checked');
+						}
+						$('#modaledit').modal('show');
+					}
+				});
+			});
+		</script>
+	</body>
+</html>

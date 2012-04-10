@@ -6,7 +6,7 @@
 	<f:if condition="{csvs}">
 		<ul>
 		<f:for each="{csvs}" as="csv">
-			<li><f:format.date>{csv.date}</f:format.date> - <f:uri.resource resource="{csv.originalResource}">Download</f:uri.resource></li>
+			<li><f:format.date>{csv.date}</f:format.date> - {csv.originalResource.filename} - <f:link.action action="importCsv" controller="Entry" arguments="{csv : csv}">importieren</f:link.action></li>
 		</f:for>
 		</ul>
 	</f:if>
