@@ -48,16 +48,26 @@ class JsonController extends ActionController {
 		$account = $this->authenticationManager->getSecurityContext()->getAccount();
 		$user = $account->getParty();
 		$entries = $this->entryRepository->findByStartAndEnd($start, $end, $user);
-		$jsonArray = array();
+		$jsonArray = array();		
 		if($entries->count() > 0) {
 			foreach($entries as $entry) {
+				$color = '#0074CC';
+
+				if($entry->getHoliday()) {
+					$color = '#F89406';
+				}
+
+				if($entry->getSchool()) {
+					$color = '#2F96B4';
+				}
 				$jsonArray[] = array(
 				'title' => $entry->getWork(),
 				'start' => $entry->getDate()->getTimestamp(),
 				'id' => $this->persistenceManager->getIdentifierByObject($entry),
 				'holiday' => $entry->getHoliday(),
 				'school' => $entry->getSchool(),
-				'duration' => $entry->getDuration()
+				'duration' => $entry->getDuration(),
+				'color' => $color
 				);
 			}
 		}
