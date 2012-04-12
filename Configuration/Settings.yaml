@@ -8,4 +8,4 @@ TYPO3:
             providerClass: PersistedUsernamePasswordProvider
             entryPoint:
               WebRedirect:
-                uri: recordbook/user/login
+                uri: recordbook/login/login

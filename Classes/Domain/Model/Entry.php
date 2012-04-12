@@ -130,7 +130,7 @@ class Entry {
 	 * @return boolean $holiday
 	 */
 	public function getHoliday() {
-		return $this->holiday;
+		return $this->holiday ? true : false;
 	}
 
 	/**
@@ -158,7 +158,7 @@ class Entry {
 	 * @return boolean $school
 	 */
 	public function getSchool() {
-		return $this->school;
+		return $this->school ? true : false;
 	}
 
 	/**

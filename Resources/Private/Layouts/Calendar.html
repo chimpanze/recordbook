@@ -39,13 +39,16 @@
 									<li><f:link.action action="calendar" controller="Entry"><i class="icon-calendar icon-white"></i> Kalender</f:link.action></li>
 									<li><f:link.action action="index" controller="Entry"><i class="icon-list-alt icon-white"></i> Einträge</f:link.action></li>
 									<li><f:link.action action="index" controller="User"><i class="icon-user icon-white"></i> Mein Account</f:link.action></li>
-									<li><f:link.action action="logout" controller="User"><i class="icon-eject icon-white"></i> Logout</f:link.action></li>
+									<li><f:link.action action="logout" controller="Login"><i class="icon-eject icon-white"></i> Logout</f:link.action></li>
 								</f:then>
 								<f:else>
-									<li><f:link.action action="login" controller="User"><i class="icon-user icon-white"></i> Login</f:link.action></li>
-									<li><f:link.action action="register" controller="User"><i class="icon-heart icon-white"></i> Registrieren</f:link.action></li>
+									<li><f:link.action action="login" controller="Login"><i class="icon-user icon-white"></i> Login</f:link.action></li>
+									<li><f:link.action action="register" controller="Login"><i class="icon-heart icon-white"></i> Registrieren</f:link.action></li>
 								</f:else>
 							</f:security.ifHasRole>
+							<li id="loading" class="hide">
+								<a><img src="_Resources/Static/Packages/RecordBook/img/loading.gif" alt="Loading" /> Daten werden geladen...</a>
+							</li>
 						</ul>
 					</div><!--/.nav-collapse -->
 				</div>
@@ -105,6 +108,51 @@
 			</form>
 		</div>
 		
+		<div id="modalnew" class="modal hide fade">
+			<form action="/recordbook/json/new" id="new" method="POST" class="form-horizontal">
+				<div class="modal-header">
+					<a class="close" data-dismiss="modal">×</a>
+					<h3>Eintrag erstellen</h3>
+				</div>
+				<div class="modal-body">
+						<div class="control-group">
+							<label class="control-label" for="work">Beschreibung</label>
+							<div class="controls">
+								<textarea rows="3" cols="50" id="work" name="work" class="input-xlarge"></textarea>
+							</div>
+						</div>
+						<div class="control-group">
+							<label class="control-label" for="date">Datum:</label>
+							<div class="controls">
+								<input type="text" name="date" id="date" />
+							</div>
+						</div>	
+						<div class="control-group">
+							<label class="control-label" for="duration">Dauer:</label>
+							<div class="controls">
+								<input type="text" name="duration" id="duration" />
+							</div>
+						</div>		
+						<div class="control-group">
+							<label class="control-label" for="holiday">Urlaub:</label>
+							<div class="controls">
+								<input type="checkbox" name="holiday" id="holiday" />
+							</div>
+						</div>	
+						<div class="control-group">
+							<label class="control-label" for="school">Schule:</label>
+							<div class="controls">
+								<input type="checkbox" name="school" id="school" />
+							</div>
+						</div>	
+				</div>
+				<div class="modal-footer">
+					<a href="#" class="btn" data-dismiss="modal">Abbrechen</a>
+					<input type="submit" class="btn btn-primary" id="submit" value="Speichern" />
+				</div>
+			</form>
+		</div>
+		
 		<!-- Le javascript
 		================================================== -->
 		<!-- Placed at the end of the document so the pages load faster -->
@@ -125,10 +173,49 @@
 						data: fields,
 						success: function(data) {
 							$('#modaledit').modal('hide');
-							$('#calendar').fullCalendar( 'refetchEvents' )
+							$('#calendar').fullCalendar('refetchEvents')
 						},
 						error: function(data) {
 							
+						},
+						beforeSend: function() {
+							$('#modaledit').find('input[type="submit"]').attr('disabled', 'disabled');
+						},
+						complete: function() {
+							$('#modaledit').find('input[type="submit"]').removeAttr('disabled', 'disabled');
+						}
+					});
+					
+					return false;
+				});
+				
+				$('#new').submit(function(event) {
+					event.preventDefault();
+					
+					var fields = $('#new').serializeArray();
+					
+					$.ajax({
+						url: '/recordbook/json/new',
+						type: 'POST',
+						data: fields,
+						success: function(data) {
+							$('#modalnew').modal('hide');
+							$('#modaledit').find('#id').val('');
+							$('#modaledit').find('#work').val('');
+							$('#modaledit').find('#date').val('');
+							$('#modaledit').find('#duration').val('');
+							$('#modaledit').find('#holiday').removeAttr('checked');
+							$('#modaledit').find('#school').removeAttr('checked');
+							$('#calendar').fullCalendar('refetchEvents')
+						},
+						error: function(data) {
+							
+						},
+						beforeSend: function() {
+							$('#modalnew').find('input[type="submit"]').attr('disabled', 'disabled');
+						},
+						complete: function() {
+							$('#modalnew').find('input[type="submit"]').removeAttr('disabled', 'disabled');
 						}
 					});
 					
@@ -162,6 +249,12 @@
 							},
 							error: function(data) {
 								revertFunc();
+							},
+							beforeSend: function() {
+								$('#loading').show();
+							},
+							complete: function() {
+								$('#loading').hide();
 							}
 						});
 					},
@@ -181,6 +274,18 @@
 							$('#modaledit').find('#school').removeAttr('checked');
 						}
 						$('#modaledit').modal('show');
+					},
+					dayClick: function(date, allDay, jsEvent, view) {
+						$('#modalnew').find('#date').val($.fullCalendar.formatDate(date, 'dd.MM.yyyy'));
+						$('#modalnew').modal('show');
+					},
+					loading: function(isLoading, view) {
+						
+						if(isLoading) {
+							$('#loading').show();
+						} else {
+							$('#loading').hide();
+						}
 					}
 				});
 			});

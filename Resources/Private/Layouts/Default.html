@@ -38,11 +38,11 @@
 									<li><f:link.action action="calendar" controller="Entry"><i class="icon-calendar icon-white"></i> Kalender</f:link.action></li>
 									<li><f:link.action action="index" controller="Entry"><i class="icon-list-alt icon-white"></i> Einträge</f:link.action></li>
 									<li><f:link.action action="index" controller="User"><i class="icon-user icon-white"></i> Mein Account</f:link.action></li>
-									<li><f:link.action action="logout" controller="User"><i class="icon-eject icon-white"></i> Logout</f:link.action></li>
+									<li><f:link.action action="logout" controller="Login"><i class="icon-eject icon-white"></i> Logout</f:link.action></li>
 								</f:then>
 								<f:else>
-									<li><f:link.action action="login" controller="User"><i class="icon-user icon-white"></i> Login</f:link.action></li>
-									<li><f:link.action action="register" controller="User"><i class="icon-heart icon-white"></i> Registrieren</f:link.action></li>
+									<li><f:link.action action="login" controller="Login"><i class="icon-user icon-white"></i> Login</f:link.action></li>
+									<li><f:link.action action="register" controller="Login"><i class="icon-heart icon-white"></i> Registrieren</f:link.action></li>
 								</f:else>
 							</f:security.ifHasRole>
 						</ul>

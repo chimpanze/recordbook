@@ -3,16 +3,57 @@
 <f:section name="Title">Edit user "{user.name}"</f:section>
 
 <f:section name="Content">
-	<f:form action="update" object="{user}" name="user">
-		<ol>
-			<li>
-				<label for="name">Name</label>
-				<f:form.textfield property="name" id="name" />
-			</li>
-		
-			<li>
-				<f:form.submit value="Update"/>
-			</li>
-		</ol>
+	<f:form action="update" object="{account}" name="account" class="form form-horizontal">
+		<fieldset>
+			<legend>Benutzerdaten ändern:</legend>
+			<div class="control-group">
+				<label for="name" class="control-label">Benutzername:</label>
+				<div class="controls">
+					<f:form.textfield property="accountIdentifier" disabled="disabled" id="name" />
+				</div>
+			</div>
+			<div class="control-group">
+				<label for="email" class="control-label">E-Mail Adresse:</label>
+				<div class="controls">
+					<f:form.textfield property="party.primaryElectronicAddress.identifier" id="email" />
+				</div>
+			</div>
+			<div class="form-actions">
+				<f:form.submit value="Speichern" class="btn btn-primary" />
+			</div>
+		</fieldset>
 	</f:form>
+	<f:form action="changepw" name="account" class="form form-horizontal">
+		<fieldset>
+			<legend>Passwort ändern:</legend>
+			<div class="control-group">
+				<label for="oldpassword" class="control-label">Altes Passwort:</label>
+				<div class="controls">
+					<f:form.password name="oldpassword" id="oldpassword" />
+				</div>
+			</div>
+			<div class="control-group">
+				<label for="newpassword" class="control-label">Neues Passwort:</label>
+				<div class="controls">
+					<f:form.password name="newpassword" id="newpassword" />
+				</div>
+			</div>
+			<div class="control-group">
+				<label for="newpasswordrepeat" class="control-label">Neues Passwort wiederholen:</label>
+				<div class="controls">
+					<f:form.password name="newpasswordrepeat" id="newpasswordrepeat" />
+				</div>
+			</div>
+			<div class="form-actions">
+				<f:form.submit value="Kennwort ändern" class="btn btn-primary" />
+			</div>
+		</fieldset>
+	</f:form>
+</f:section>
+
+<f:section name="Sidebar">
+	<ul class="nav nav-pills nav-stacked">
+		<li><f:link.action action="index"><i class="icon-user"></i> Übersicht</f:link.action></li>
+		<li class="active"><f:link.action action="edit" arguments="{account : account}"><i class="icon-edit"></i> Benuterdaten ändern</f:link.action></li>
+	</ul>
 </f:section>

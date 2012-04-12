@@ -1,3 +1,4 @@
+{namespace rb=RecordBook\ViewHelpers}
 <f:layout name="Default" />
 
 <f:section name="Title">A list of entries</f:section>
@@ -5,22 +6,51 @@
 <f:section name="Content">
 	<f:if condition="{entries}">
 		<f:then>
-			<ul>
-				<f:for each="{entries}" as="entry">
-					<li>
-						<f:link.action action="show" arguments="{entry: entry}"><f:format.date>{entry.date}</f:format.date></f:link.action>
-						{entry.user.username}
-						<f:link.action action="edit" arguments="{entry: entry}">Edit</f:link.action>
-						<f:link.action action="delete" arguments="{entry: entry}">Delete</f:link.action>
-					</li>
-				</f:for>
-			</ul>
+			<rb:widget.paginate objects="{entries}" as="paginatedEntries" configuration="{itemsPerPage: 20, insertBelow: 1, maximumNumberOfLinks: 10}">
+				<table class="table table-condensed">
+					<thead>
+						<tr>
+							<th>Datum</th>
+							<th>Beschreibung</th>
+							<th>Dauer</th>
+							<th>Schule</th>
+							<th>Urlaub</th>
+							<th></th>
+						</tr>
+					</thead>
+
+					<tbody>
+						<f:for each="{paginatedEntries}" as="entry">
+							<tr>
+								<td>
+									<f:format.date format="d.m.Y">{entry.date}</f:format.date>
+								</td>
+								<td>
+									<f:format.crop maxCharacters="50" append="...">{entry.work}</f:format.crop>
+								</td>
+								<td>
+									{entry.duration}
+								</td>
+								<td>
+									<f:if condition="{entry.school}"><f:then>x</f:then><f:else></f:else></f:if>
+								</td>
+								<td>
+									<f:if condition="{entry.holiday}"><f:then>x</f:then><f:else></f:else></f:if>
+								</td>
+								<td>
+									<f:link.action action="edit" arguments="{entry: entry}" class="btn btn-mini"><i class="icon-pencil"></i></f:link.action>
+									<f:link.action action="delete" arguments="{entry: entry}" class="btn btn-mini btn-danger"><i class="icon-trash"></i></f:link.action>
+								</td>
+							</tr>
+						</f:for>
+					</tbody>
+				</table>
+			</rb:widget.paginate>
 		</f:then>
 		<f:else>
-			<p>No entries created yet.</p>
+			<p>Noch keine Einträge angelegt.</p>
 		</f:else>
 	</f:if>
-	<p><f:link.action action="new">Create a new entry</f:link.action></p>
 </f:section>
 
 <f:section name="Sidebar">

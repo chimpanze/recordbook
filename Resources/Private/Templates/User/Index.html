@@ -3,30 +3,34 @@
 <f:section name="Title">A list of users</f:section>
 
 <f:section name="Content">
-	<f:security.ifHasRole role="User">
-	<f:if condition="{users}">
-		<f:then>
-			<ul>
-				<f:for each="{users}" as="user">
-					<li>
-						<f:link.action action="show" arguments="{user: user}">{user.name}</f:link.action>
-						<f:link.action action="edit" arguments="{user: user}">Edit</f:link.action>
-						<f:link.action action="delete" arguments="{user: user}">Delete</f:link.action>
-					</li>
-				</f:for>
-			</ul>
-		</f:then>
-		<f:else>
-			<p>No users created yet.</p>
-		</f:else>
-	</f:if>
-	</f:security.ifHasRole>
-	<p><f:link.action action="new">Create a new user</f:link.action></p>
+	<h3>Accountdaten</h3>
+	<table class="table table-condensed">
+		<tbody>
+			<tr>
+				<td style="width: 150px;">Benutzername:</td>
+				<td>{account.accountIdentifier}</td>
+			</tr>
+			<tr>
+				<td style="width: 150px;">E-Mail Adresse:</td>
+				<td>{account.party.primaryElectronicAddress.identifier}</td>
+			</tr>
+		</tbody>
+	</table>
+	<h3>Persönliche Daten</h3>
+	<table class="table table-condensed">
+		<tbody>
+			<tr>
+				<td style="width: 150px;">Name:</td>
+				<td>{account.party.name.firstName} {account.party.name.lastName}</td>
+			</tr>
+		</tbody>
+	</table>
+	<f:link.action action="edit" class="button" arguments="{account : account}"><i class="icon-pencil"></i> Meine Daten bearbeiten</f:link.action>
 </f:section>
 
 <f:section name="Sidebar">
 	<ul class="nav nav-pills nav-stacked">
 		<li class="active"><f:link.action action="index"><i class="icon-user"></i> Übersicht</f:link.action></li>
-		<li><f:link.action action="edit"><i class="icon-edit"></i> Benuterdaten ändern</f:link.action></li>
+		<li><f:link.action action="edit" arguments="{account : account}"><i class="icon-edit"></i> Benuterdaten ändern</f:link.action></li>
 	</ul>
 </f:section>

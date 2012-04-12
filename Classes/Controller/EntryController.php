@@ -50,6 +50,32 @@ class EntryController extends ActionController {
         protected $resourceManager;
 	
 	/**
+         * Initialize the create action
+         *
+         * @return void
+         */
+        public function initializeCreateAction() {
+                $this->arguments->getArgument('newEntry')->
+                     getPropertyMappingConfiguration()
+                     ->forProperty('date') // this line can be skipped in order to specify the format for all properties
+                     ->setTypeConverterOption('TYPO3\FLOW3\Property\TypeConverter\DateTimeConverter',
+                     \TYPO3\FLOW3\Property\TypeConverter\DateTimeConverter::CONFIGURATION_DATE_FORMAT, 'd.m.Y');
+        }
+	
+	/**
+         * Initialize the create action
+         *
+         * @return void
+         */
+        public function initializeUpdateAction() {
+                $this->arguments->getArgument('entry')->
+                     getPropertyMappingConfiguration()
+                     ->forProperty('date') // this line can be skipped in order to specify the format for all properties
+                     ->setTypeConverterOption('TYPO3\FLOW3\Property\TypeConverter\DateTimeConverter',
+                     \TYPO3\FLOW3\Property\TypeConverter\DateTimeConverter::CONFIGURATION_DATE_FORMAT, 'd.m.Y');
+        }
+	
+	/**
 	 * Shows a list of entries
 	 *
 	 * @return void
@@ -78,19 +104,6 @@ class EntryController extends ActionController {
 	public function newAction() {
 		$this->view->assign('newEntry', new \RecordBook\Domain\Model\Entry());
 	}
-	
-/**
-         * Initialize the create action
-         *
-         * @return void
-         */
-        public function initializeCreateAction() {
-                $this->arguments['newEntry']->
-                     getPropertyMappingConfiguration()
-                     ->forProperty('date') // this line can be skipped in order to specify the format for all properties
-                     ->setTypeConverterOption('TYPO3\FLOW3\Property\TypeConverter\DateTimeConverter',
-                     \TYPO3\FLOW3\Property\TypeConverter\DateTimeConverter::CONFIGURATION_DATE_FORMAT, 'd.m.Y');
-        }
 
 	/**
 	 * Adds the given new entry object to the entry repository
@@ -125,7 +138,7 @@ class EntryController extends ActionController {
 	 */
 	public function updateAction(Entry $entry) {
 		$this->entryRepository->update($entry);
-		$this->addFlashMessage('Updated the entry.');
+		$this->addFlashMessage('Eintrag bearbeitet.');
 		$this->redirect('index');
 	}
 
@@ -137,7 +150,7 @@ class EntryController extends ActionController {
 	 */
 	public function deleteAction(Entry $entry) {
 		$this->entryRepository->remove($entry);
-		$this->addFlashMessage('Deleted a entry.');
+		$this->addFlashMessage('Eintrag gelöscht.');
 		$this->redirect('index');
 	}
 	

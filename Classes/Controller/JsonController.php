@@ -58,8 +58,13 @@ class JsonController extends ActionController {
 				}
 
 				if($entry->getSchool()) {
-					$color = '#2F96B4';
+					$color = '#5BB75B';
 				}
+				
+				if($entry->getHoliday() && $entry->getSchool()) {
+					$color = '#DA4F49';
+				}
+				
 				$jsonArray[] = array(
 				'title' => $entry->getWork(),
 				'start' => $entry->getDate()->getTimestamp(),
@@ -79,7 +84,7 @@ class JsonController extends ActionController {
 	 * 
 	 * @param string $id
 	 * @param string $date 
-	 * @return void
+	 * @return string
 	 */
 	public function dropAction($id, $date) {
 		$entry = $this->entryRepository->findByIdentifier($id);
@@ -99,23 +104,60 @@ class JsonController extends ActionController {
 	 * @param float $duration
 	 * @param string $holiday
 	 * @param string $school 
+	 * @return string
 	 */
 	public function updateAction($id, $work, $date, $duration, $holiday = '', $school = '') {
+		$account = $this->authenticationManager->getSecurityContext()->getAccount();
+		$user = $account->getParty();
 		$entry = $this->entryRepository->findByIdentifier($id);
+		if($entry->getUser() === $user) {
+			$newDateTime = new \DateTime();
+			$splittedDate = explode('.', $date);
+			$newDateTime->setDate($splittedDate[2], $splittedDate[1], $splittedDate[0]);
+
+			$entry->setDate($newDateTime);
+			$entry->setWork($work);
+			$entry->setDuration((float)$duration);
+			$entry->setHoliday($holiday == 'on' ? true : false);
+			$entry->setSchool($school == 'on' ? true : false);
+
+			$this->entryRepository->update($entry);
+			return 'OK';
+		} else {
+			header("Status: 401 Unauthorized");
+			return 'NOT OK';
+		}
+	}
+	
+	/**
+	 *
+	 * @param string $work
+	 * @param string $date
+	 * @param string $duration
+	 * @param string $holiday
+	 * @param string $school
+	 * @return string 
+	 */
+	public function newAction($work, $date, $duration, $holiday = '', $school = '') {
+		$account = $this->authenticationManager->getSecurityContext()->getAccount();
+		$user = $account->getParty();
+		
+		$newEntry = new \RecordBook\Domain\Model\Entry();
 		$newDateTime = new \DateTime();
 		$splittedDate = explode('.', $date);
 		$newDateTime->setDate($splittedDate[2], $splittedDate[1], $splittedDate[0]);
+
+		$newEntry->setDate($newDateTime);
+		$newEntry->setWork($work);
+		$newEntry->setDuration((float)$duration);
+		$newEntry->setHoliday($holiday == 'on' ? true : false);
+		$newEntry->setSchool($school == 'on' ? true : false);
+		$newEntry->setUser($user);
 		
-		$entry->setDate($newDateTime);
-		$entry->setWork($work);
-		$entry->setDuration((float)$duration);
-		$entry->setHoliday($holiday == 'on' ? true : false);
-		$entry->setSchool($school == 'on' ? true : false);
+		$this->entryRepository->add($newEntry);
 		
-		$this->entryRepository->update($entry);
 		return 'OK';
-	}
-	
+	}	
 	
 }
 ?>

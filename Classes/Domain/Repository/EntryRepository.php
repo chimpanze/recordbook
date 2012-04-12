@@ -15,6 +15,11 @@ use \RecordBook\Domain\Model\User;
  * @FLOW3\Scope("singleton")
  */
 class EntryRepository extends \TYPO3\FLOW3\Persistence\Repository {
+	
+	public function __construct() {
+		parent::__construct();
+		$this->setDefaultOrderings(array('date' => \TYPO3\FLOW3\Persistence\QueryInterface::ORDER_DESCENDING));
+	}
 
 	/**
 	 * Retrieve Entries by Start Timestamp and End Timestamp
