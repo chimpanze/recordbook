@@ -1,11 +1,12 @@
 TYPO3:
   FLOW3:
     security:
+      enable: TRUE
       authentication:
         authenticationStrategy: oneToken
         providers:
           DefaultProvider:
-            providerClass: PersistedUsernamePasswordProvider
+            providerClass: 'PersistedUsernamePasswordProvider'
             entryPoint:
               WebRedirect:
-                uri: recordbook/login/login
+                uri: 'recordbook/login/login'

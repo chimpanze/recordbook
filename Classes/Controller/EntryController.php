@@ -77,7 +77,8 @@ class EntryController extends ActionController {
 	
 	/**
 	 * Shows a list of entries
-	 *
+	 * 
+	 * @FLOW3\SkipCsrfProtection
 	 * @return void
 	 */
 	public function indexAction() {
@@ -87,18 +88,9 @@ class EntryController extends ActionController {
 	}
 
 	/**
-	 * Shows a single entry object
-	 *
-	 * @param \RecordBook\Domain\Model\Entry $entry The entry to show
-	 * @return void
-	 */
-	public function showAction(Entry $entry) {
-		$this->view->assign('entry', $entry);
-	}
-
-	/**
 	 * Shows a form for creating a new entry object
-	 *
+	 * 
+	 * @FLOW3\SkipCsrfProtection
 	 * @return void
 	 */
 	public function newAction() {
@@ -123,6 +115,7 @@ class EntryController extends ActionController {
 	/**
 	 * Shows a form for editing an existing entry object
 	 *
+	 * @FLOW3\SkipCsrfProtection
 	 * @param \RecordBook\Domain\Model\Entry $entry The entry to edit
 	 * @return void
 	 */
@@ -173,6 +166,7 @@ class EntryController extends ActionController {
 	/**
 	 * Import Action
 	 * 
+	 * @FLOW3\SkipCsrfProtection
 	 * @return void
 	 */
 	public function importAction() {
@@ -186,6 +180,7 @@ class EntryController extends ActionController {
 	/**
 	 * Import the CSV into the Database
 	 * 
+	 * @FLOW3\SkipCsrfProtection
 	 * @param \RecordBook\Domain\Model\Csv $csv 
 	 */
 	public function importCsvAction(\RecordBook\Domain\Model\Csv $csv) {
@@ -218,7 +213,8 @@ class EntryController extends ActionController {
 	}
 	
 	/**
-	 * 
+	 * @FLOW3\SkipCsrfProtection
+	 * @return void
 	 */
 	public function calendarAction() {
 		

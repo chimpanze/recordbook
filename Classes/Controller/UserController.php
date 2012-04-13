@@ -48,6 +48,7 @@ class UserController extends ActionController {
 	/**
 	 * Shows a list of users
 	 *
+	 * @FLOW3\SkipCsrfProtection
 	 * @return void
 	 */
 	public function indexAction() {

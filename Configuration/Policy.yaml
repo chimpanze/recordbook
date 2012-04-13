@@ -1,31 +1,15 @@
 resources:
-  entities: []
   methods:
-    userMethods: 'method(RecordBook\User->.*())'
-    loginMethods: 'method(RecordBook\Login->.*())'
-    entryMethods: 'method(RecordBook\Entry->.*())'
-    jsonMethods: 'method(RecordBook\Json->.*())'
+    userMethods: 'method(RecordBook\Controller\UserController->.*())'
+    entryMethods: 'method(RecordBook\Controller\EntryController->.*())'
+    jsonMethods: 'method(RecordBook\Controller\JsonController->.*())'
 
 roles: 
-  Administrator: []
   User: []
 
 acls: 
-  Everybody:
-    methods:
-      entryMethods: DENY
-      jsonMethods: DENY
-      userMethods: DENY
-      loginMethods: DENY
   User:
     methods:
       entryMethods: GRANT
       jsonMethods: GRANT
       userMethods: GRANT
-      loginMethods: GRANT
-  Administrator:
-    methods:
-      entryMethods: GRANT
-      jsonMethods: GRANT
-      userMethods: GRANT
-      loginMethods: GRANT
