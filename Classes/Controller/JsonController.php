@@ -66,13 +66,13 @@ class JsonController extends ActionController {
 				}
 				
 				$jsonArray[] = array(
-				'title' => $entry->getWork(),
-				'start' => $entry->getDate()->getTimestamp(),
-				'id' => $this->persistenceManager->getIdentifierByObject($entry),
-				'holiday' => $entry->getHoliday(),
-				'school' => $entry->getSchool(),
-				'duration' => $entry->getDuration(),
-				'color' => $color
+					'title' => $entry->getWork(),
+					'start' => $entry->getDate()->getTimestamp(),
+					'id' => $this->persistenceManager->getIdentifierByObject($entry),
+					'holiday' => $entry->getHoliday(),
+					'school' => $entry->getSchool(),
+					'duration' => $entry->getDuration(),
+					'color' => $color
 				);
 			}
 		}
@@ -97,6 +97,7 @@ class JsonController extends ActionController {
 	}
 	
 	/**
+	 * Update an entry
 	 *
 	 * @param string $id
 	 * @param string $work
@@ -130,6 +131,7 @@ class JsonController extends ActionController {
 	}
 	
 	/**
+	 * Create a new entry
 	 *
 	 * @param string $work
 	 * @param string $date
@@ -157,7 +159,20 @@ class JsonController extends ActionController {
 		$this->entryRepository->add($newEntry);
 		
 		return 'OK';
-	}	
+	}
+	
+	/**
+	 * Delete an entry
+	 *
+	 * @param string $id
+	 * @return string 
+	 */
+	public function deleteAction($id) {
+		$entry = $this->entryRepository->findByIdentifier($id);
+		$this->entryRepository->remove($entry);
+		
+		return 'OK';
+	}
 	
 }
 ?>

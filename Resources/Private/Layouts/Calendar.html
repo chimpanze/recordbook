@@ -104,6 +104,7 @@
 				<div class="modal-footer">
 					<a href="#" class="btn" data-dismiss="modal">Abbrechen</a>
 					<input type="submit" class="btn btn-primary" id="submit" value="Speichern" />
+					<input type="button" class="btn btn-danger" id="delete" value="Löschen" />
 				</div>
 			</form>
 		</div>
@@ -165,6 +166,7 @@
 			var newUrl = '<f:uri.action action="new" controller="Json" />';
 			var loadUrl = '<f:uri.action action="load" controller="Json" />';
 			var dropUrl = '<f:uri.action action="drop" controller="Json" />';
+			var deleteUrl = '<f:uri.action action="delete" controller="Json" />';
 			
 			$(document).ready(function() {
 				$('#update').submit(function(event) {
@@ -178,7 +180,7 @@
 						data: fields,
 						success: function(data) {
 							$('#modaledit').modal('hide');
-							$('#calendar').fullCalendar('refetchEvents')
+							$('#calendar').fullCalendar('refetchEvents');
 						},
 						error: function(data) {
 							
@@ -205,13 +207,13 @@
 						data: fields,
 						success: function(data) {
 							$('#modalnew').modal('hide');
-							$('#modaledit').find('#id').val('');
-							$('#modaledit').find('#work').val('');
-							$('#modaledit').find('#date').val('');
-							$('#modaledit').find('#duration').val('');
-							$('#modaledit').find('#holiday').removeAttr('checked');
-							$('#modaledit').find('#school').removeAttr('checked');
-							$('#calendar').fullCalendar('refetchEvents')
+							$('#modalnew').find('#id').val('');
+							$('#modalnew').find('#work').val('');
+							$('#modalnew').find('#date').val('');
+							$('#modalnew').find('#duration').val('');
+							$('#modalnew').find('#holiday').removeAttr('checked');
+							$('#modalnew').find('#school').removeAttr('checked');
+							$('#calendar').fullCalendar('refetchEvents');
 						},
 						error: function(data) {
 							
@@ -225,6 +227,29 @@
 					});
 					
 					return false;
+				});
+				
+				$('#delete').click(function(event) {
+					event.preventDefault();
+					var id = $('#modaledit').find('#id').val();
+					$.ajax({
+						url: deleteUrl,
+						type: 'POST',
+						data: '?id=' + id,
+						success: function(data) {
+							$('#modaledit').modal('hide');
+							$('#calendar').fullCalendar('refetchEvents');
+						},
+						error: function(data) {
+							
+						},
+						beforeSend: function() {
+							$('#delete').attr('disabled', 'disabled');
+						},
+						complete: function() {
+							$('#delete').removeAttr('disabled', 'disabled');
+						}
+					});
 				});
 				
 				$('#calendar').fullCalendar({
