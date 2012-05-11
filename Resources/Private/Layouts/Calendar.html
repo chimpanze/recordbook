@@ -235,7 +235,7 @@
 					$.ajax({
 						url: deleteUrl,
 						type: 'POST',
-						data: '?id=' + id,
+						data: 'id=' + id,
 						success: function(data) {
 							$('#modaledit').modal('hide');
 							$('#calendar').fullCalendar('refetchEvents');
