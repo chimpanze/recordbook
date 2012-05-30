@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
+{namespace rb=RecordBook\ViewHelpers}
 <Entries>
 <f:for each="{entries}" as="yearEntries" key="year">
     <EntryYear year="{year}">
@@ -7,7 +7,7 @@
 	<EntryWeek weekNum="{week}" startDate="{weekEntries.startDate -> f:format.date(format: 'd.m.Y')}" endDate="{weekEntries.endDate -> f:format.date(format: 'd.m.Y')}" endDateFriday="{weekEntries.endDateFriday -> f:format.date(format: 'd.m.Y')}">
 		<f:for each="{weekEntries.data}" as="entry">
 		<Entry day="{entry.date -> f:format.date(format: 'd')}" duration="{entry.duration}" date="{entry.date -> f:format.date(format: 'd.m.Y')}">
-			<Description>{entry.work}</Description>
+			<Description><rb:cdata>{entry.work}</rb:cdata></Description>
 			<Holiday>{f:if(condition: '{entry.holiday}', then: '1', else: '0')}</Holiday>
 			<School>{f:if(condition: '{entry.school}', then: '1', else: '0')}</School>
 		</Entry>
