@@ -82,8 +82,7 @@ class EntryController extends ActionController {
 	 * @return void
 	 */
 	public function indexAction() {
-		$account = $this->authenticationManager->getSecurityContext()->getAccount();
-		$user = $account->getParty();
+		$user = $this->getUser();
 		$this->view->assign('entries', $this->entryRepository->findByUser($user));
 	}
 
@@ -104,8 +103,7 @@ class EntryController extends ActionController {
 	 * @return void
 	 */
 	public function createAction(\RecordBook\Domain\Model\Entry $newEntry) {
-		$account = $this->authenticationManager->getSecurityContext()->getAccount();
-		$user = $account->getParty();
+		$user = $this->getUser();
 		$newEntry->setUser($user);
 		$this->entryRepository->add($newEntry);
 		$this->addFlashMessage('Neuer Eintrag erstellt.');
@@ -154,8 +152,7 @@ class EntryController extends ActionController {
 	 * @return void
 	 */
 	public function uploadAction(\RecordBook\Domain\Model\Csv $newCsv) {
-		$account = $this->authenticationManager->getSecurityContext()->getAccount();
-		$user = $account->getParty();
+		$user = $this->getUser();
 		$newCsv->setUser($user);
 		$newCsv->setDate(new \DateTime());
 		$this->csvRepository->add($newCsv);
@@ -170,8 +167,7 @@ class EntryController extends ActionController {
 	 * @return void
 	 */
 	public function importAction() {
-		$account = $this->authenticationManager->getSecurityContext()->getAccount();
-		$user = $account->getParty();
+		$user = $this->getUser();
 		$csvs = $this->csvRepository->findByUser($user);
 		$this->view->assign('csvs', $csvs);
 		$this->view->assign('newCsv', new \RecordBook\Domain\Model\Csv());		
@@ -184,8 +180,7 @@ class EntryController extends ActionController {
 	 * @param \RecordBook\Domain\Model\Csv $csv 
 	 */
 	public function importCsvAction(\RecordBook\Domain\Model\Csv $csv) {
-		$account = $this->authenticationManager->getSecurityContext()->getAccount();
-		$user = $account->getParty();
+		$user = $this->getUser();
 		
 		$resource = $csv->getOriginalResource()->getResourcePointer();
 		$csvFile = file_get_contents('resource://' . $resource);
@@ -219,7 +214,25 @@ class EntryController extends ActionController {
 	public function calendarAction() {
 		
 	}
+	
+	/**
+	 * @FLOW3\SkipCsrfProtection
+	 * @return void 
+	 */
+	public function exportAction() {
+		
+	}
+	
+	/**
+	 * Get user and return it
+	 *
+	 * @return \RecordBook\Domain\Model\User
+	 */
+	private function getUser() {
+		$account = $this->authenticationManager->getSecurityContext()->getAccount();
+		$user = $account->getParty();
+		return $user;
+	}
 
 }
-
 ?>

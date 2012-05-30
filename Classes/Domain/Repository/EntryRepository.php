@@ -46,6 +46,47 @@ class EntryRepository extends \TYPO3\FLOW3\Persistence\Repository {
 				)			
 			)->execute();
 	}
+	
+	/**
+	 * Retrieve Entries by User and give it back as array aggregated in weeks
+	 * @param \RecordBook\Domain\Model\User $user
+	 * @return array
+	 */
+	public function findByUserAndAggregateInWeeks($user) {
+		$query = $this->createQuery();
+		
+		$entries = $query->matching($query->equals('user', $user))->execute();
+		
+		/**
+		 * dataArray[year][week][startDate/endDate/data][] = data 
+		 */
+		$dataArray = array();
+		
+		if($entries->count() > 0) {
+			foreach($entries as $entry) {
+				/* @var $date \DateTime */
+				$date = $entry->getDate();
+				$week = $date->format('W');
+				$year = $date->format('Y');
+				$weekRange = $this->weekRange($date->format('U'));
+				$dataArray[$year][$week]['startDate'] = \DateTime::createFromFormat('d.m.Y', $weekRange[0]);
+				$dataArray[$year][$week]['endDateFriday'] = \DateTime::createFromFormat('d.m.Y', $weekRange[2]);
+				$dataArray[$year][$week]['endDate'] = \DateTime::createFromFormat('d.m.Y', $weekRange[1]);
+				$dataArray[$year][$week]['data'][] = $entry;
+			}
+			ksort($dataArray);
+			foreach($dataArray as &$array) {
+				ksort($array);
+			}
+		}
+		
+		return $dataArray;
+	}
+	
+	private function weekRange($ts) {
+		$start = (date('w', $ts) == 0) ? $ts : strtotime('last monday', $ts);
+		return array(date('d.m.Y', $start), date('d.m.Y', strtotime('next sunday', $start)), date('d.m.Y', strtotime('next friday', $start)));
+	}
 
 }
 ?>
