@@ -203,6 +203,7 @@ class EntryController extends ActionController {
 				$this->entryRepository->add($newEntry);
 			}
 		}
+		$this->csvRepository->remove($csv);
 		$this->addFlashMessage('Der Inhalt wurde importiert.');
 		$this->forward('import');
 	}
