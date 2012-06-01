@@ -54,7 +54,7 @@ class EntryRepository extends \TYPO3\FLOW3\Persistence\Repository {
 	 */
 	public function findByUserAndAggregateInWeeks($user) {
 		$query = $this->createQuery();
-		
+		$query->setOrderings(array('date' => \TYPO3\FLOW3\Persistence\QueryInterface::ORDER_ASCENDING));
 		$entries = $query->matching($query->equals('user', $user))->execute();
 		
 		/**
@@ -76,12 +76,6 @@ class EntryRepository extends \TYPO3\FLOW3\Persistence\Repository {
 				$dataArray[$year][$month][$week]['data'][] = $entry;
 			}
 			ksort($dataArray);
-			foreach($dataArray as &$array) {
-				ksort($array);
-				foreach($array as &$underArray) {
-					ksort($underArray);
-				}
-			}
 		}
 		
 		return $dataArray;
