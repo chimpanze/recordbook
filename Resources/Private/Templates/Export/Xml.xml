@@ -5,7 +5,7 @@
     <EntryYear year="{year}">
 	<f:for each="{yearEntries}" as="monthEntries" key="month">
 		<EntryMonth month="month">
-		<f:for each="monthEntries" as="weekEntries" key="week">
+		<f:for each="{monthEntries}" as="weekEntries" key="week">
 			<EntryWeek week="{week}" startDate="{weekEntries.startDate -> f:format.date(format: 'd.m.Y')}" endDate="{weekEntries.endDate -> f:format.date(format: 'd.m.Y')}" endDateFriday="{weekEntries.endDateFriday -> f:format.date(format: 'd.m.Y')}">
 				<f:for each="{weekEntries.data}" as="entry">
 				<Entry day="{entry.date -> f:format.date(format: 'd')}" duration="{entry.duration}" date="{entry.date -> f:format.date(format: 'd.m.Y')}">
