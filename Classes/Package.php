@@ -11,5 +11,9 @@ use TYPO3\FLOW3\Annotations as FLOW3;
  */
 class Package extends BasePackage {
 
+	public function boot(\TYPO3\FLOW3\Core\Bootstrap $bootstrap) {
+		require(__DIR__ . '/../Resources/Private/PHP/tcpdf/config/lang/ger.php');
+		require(__DIR__ . '/../Resources/Private/PHP/tcpdf/tcpdf.php');
+	}
 }
 ?>

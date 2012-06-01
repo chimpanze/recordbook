@@ -67,12 +67,13 @@ class EntryRepository extends \TYPO3\FLOW3\Persistence\Repository {
 				/* @var $date \DateTime */
 				$date = $entry->getDate();
 				$week = $date->format('W');
+				$month = $date->format('m');
 				$year = $date->format('Y');
 				$weekRange = $this->weekRange($date->format('U'));
-				$dataArray[$year][$week]['startDate'] = \DateTime::createFromFormat('d.m.Y', $weekRange[0]);
-				$dataArray[$year][$week]['endDateFriday'] = \DateTime::createFromFormat('d.m.Y', $weekRange[2]);
-				$dataArray[$year][$week]['endDate'] = \DateTime::createFromFormat('d.m.Y', $weekRange[1]);
-				$dataArray[$year][$week]['data'][] = $entry;
+				$dataArray[$year][$month][$week]['startDate'] = \DateTime::createFromFormat('d.m.Y', $weekRange[0]);
+				$dataArray[$year][$month][$week]['endDateFriday'] = \DateTime::createFromFormat('d.m.Y', $weekRange[2]);
+				$dataArray[$year][$month][$week]['endDate'] = \DateTime::createFromFormat('d.m.Y', $weekRange[1]);
+				$dataArray[$year][$month][$week]['data'][] = $entry;
 			}
 			ksort($dataArray);
 			foreach($dataArray as &$array) {

@@ -3,16 +3,21 @@
 <Entries>
 <f:for each="{entries}" as="yearEntries" key="year">
     <EntryYear year="{year}">
-	<f:for each="{yearEntries}" as="weekEntries" key="week">
-	<EntryWeek weekNum="{week}" startDate="{weekEntries.startDate -> f:format.date(format: 'd.m.Y')}" endDate="{weekEntries.endDate -> f:format.date(format: 'd.m.Y')}" endDateFriday="{weekEntries.endDateFriday -> f:format.date(format: 'd.m.Y')}">
-		<f:for each="{weekEntries.data}" as="entry">
-		<Entry day="{entry.date -> f:format.date(format: 'd')}" duration="{entry.duration}" date="{entry.date -> f:format.date(format: 'd.m.Y')}">
-			<Description><rb:cdata>{entry.work}</rb:cdata></Description>
-			<Holiday>{f:if(condition: '{entry.holiday}', then: '1', else: '0')}</Holiday>
-			<School>{f:if(condition: '{entry.school}', then: '1', else: '0')}</School>
-		</Entry>
+	<f:for each="{yearEntries}" as="monthEntries" key="month">
+		<EntryMonth month="month">
+		<f:for each="monthEntries" as="weekEntries" key="week">
+			<EntryWeek week="{week}" startDate="{weekEntries.startDate -> f:format.date(format: 'd.m.Y')}" endDate="{weekEntries.endDate -> f:format.date(format: 'd.m.Y')}" endDateFriday="{weekEntries.endDateFriday -> f:format.date(format: 'd.m.Y')}">
+				<f:for each="{weekEntries.data}" as="entry">
+				<Entry day="{entry.date -> f:format.date(format: 'd')}" duration="{entry.duration}" date="{entry.date -> f:format.date(format: 'd.m.Y')}">
+					<Description><rb:cdata>{entry.work}</rb:cdata></Description>
+					<Holiday>{f:if(condition: '{entry.holiday}', then: '1', else: '0')}</Holiday>
+					<School>{f:if(condition: '{entry.school}', then: '1', else: '0')}</School>
+				</Entry>
+				</f:for>
+
+			</EntryWeek>
 		</f:for>
-	</EntryWeek>
+		</EntryMonth>
 	</f:for>
     </EntryYear>
 </f:for>
