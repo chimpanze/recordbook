@@ -119,14 +119,17 @@ class ExportController extends ActionController {
 					//$htmlcontent .= '<td width="15%" bgcolor="#dbdbdb"></td>';
 					$htmlcontent .= '</tr>';
 
-
-				foreach($weekly['data'] as $report) {
-					$htmlcontent .= '<tr>';
-					$htmlcontent .= '<td width="100%" colspan="2">'.nl2br($report->getWork()).'</td>';
-					//$htmlcontent .= '<td width="15%">'.$report['hours'].'</td>';
-					$htmlcontent .= '</tr>';
-					$hours_week += $report->getDuration();
-				}
+					$textArray = array();
+					foreach($weekly['data'] as $report) {
+						if(!in_array(nl2br($report->getWork()), $textArray)) {
+							$htmlcontent .= '<tr>';
+							$htmlcontent .= '<td width="100%" colspan="2">'.nl2br($report->getWork()).'</td>';
+							//$htmlcontent .= '<td width="15%">'.$report['hours'].'</td>';
+							$htmlcontent .= '</tr>';
+							//$hours_week += $report->getDuration();
+							$textArray[] = nl2br($report->getWork());
+						}
+					}
 				}
 
 				/* $htmlcontent .= '<tr>';
