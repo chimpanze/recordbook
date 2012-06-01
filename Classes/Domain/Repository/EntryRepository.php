@@ -78,6 +78,9 @@ class EntryRepository extends \TYPO3\FLOW3\Persistence\Repository {
 			ksort($dataArray);
 			foreach($dataArray as &$array) {
 				ksort($array);
+				foreach($array as &$underArray) {
+					ksort($underArray);
+				}
 			}
 		}
 		
