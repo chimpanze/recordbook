@@ -203,7 +203,15 @@ class LoginController extends ActionController {
 				$password = $this->createRandomPassword();
 				$account->setCredentialsSource($this->hashService->hashPassword($password));
 				$this->accountRepository->update($account);
-				$this->addFlashMessage('Ein neues Passwort wurde gesetzt: '.$password, 'Info', \TYPO3\FLOW3\Error\Message::SEVERITY_NOTICE);
+				
+				$mail = new \TYPO3\SwiftMailer\Message();
+				$mail->setFrom(array('passwordreset@recordbookgenerator.com' => 'Berichtsheft Generator'))
+					->setTo(array($email => $username))
+					->setSubject('Passwort zurücksetzen')
+					->setBody('Ein neues Passwort wurde gesetzt: '.$password)
+					->send();
+				
+				$this->addFlashMessage('Ein neues Passwort wurde gesetzt.', 'Info', \TYPO3\FLOW3\Error\Message::SEVERITY_NOTICE);
 			} else {
 				$this->addFlashMessage('Die E-Mail Adresse stimmt nicht.', 'Fehler', \TYPO3\FLOW3\Error\Message::SEVERITY_ERROR);
 			}
