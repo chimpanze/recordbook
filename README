@@ -1,0 +1,16 @@
+# Requirements
+
+A running FLOW3 1.0.4 on your Webserver.
+
+# Installation
+
+Clone the repo into the Directory "RecordBook" under "Packages/Application/".
+So the full path would be "Packages/Application/RecordBook".
+
+`git clone git://github.com/chimpanze/recordbook.git RecordBook`
+
+After that you can run `flow3 doctrine:update` and the database should be updated.
+
+You can access the running RecordBook under http://yourserver/RecordBook/
+
+If something is missing or not complete, just ask me under marten@ungeordnet.de.
